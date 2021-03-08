@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:url_launcher/url_launcher.dart';
 import 'package:Alzeheimer/data/model_user.dart';
 import 'package:Alzeheimer/data/user.dart';
 import 'package:Alzeheimer/screens/adminInfo.dart';
@@ -7,9 +7,11 @@ import 'package:Alzeheimer/screens/patientInfo/patientInfo.dart';
 import 'package:Alzeheimer/screens/signUp.dart';
 import 'package:Alzeheimer/screens/signin.dart';
 import 'package:Alzeheimer/utility/my_style.dart';
+import 'package:Alzeheimer/utility/signout_process.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:Alzeheimer/screens/assignActivity/patientList.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -140,16 +142,23 @@ class _HomeState extends State<Home> {
   }
 
   Widget emergencyCircle() {
-    return Container(
-      width: 220,
-      height: 220,
-      child: Image.asset(('images/emergency_logo.png')),
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
+    return GestureDetector(
+      onTap: (){
+       
+launch("tel://+66869086116");
+ print('test call phone6');
+      },
+      child: Container(
+        width: 220,
+        height: 220,
+        child: Image.asset(('images/emergency_logo.png')),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
 
-        // image: DecorationImage(
-        //     //image: ,
-        //     fit: BoxFit.fill),
+          // image: DecorationImage(
+          //     //image: ,
+          //     fit: BoxFit.fill),
+        ),
       ),
     );
   }
@@ -213,22 +222,29 @@ class _HomeState extends State<Home> {
   }
 
   Widget assignActivity() {
-    return Container(
-      //margin: const EdgeInsets.only(left: 65, right: 65),
-      width: 106,
-      height: 101,
-      child: new Center(
-        widthFactor: 58,
-        heightFactor: 64,
-        child: new Image.asset(
-          'images/assignActivity.png',
-          width: 58,
-          height: 64,
+    return GestureDetector(
+      onTap: (){
+        MaterialPageRoute route = MaterialPageRoute(
+            builder: (value) => PatientList()); //วิธีเชื่อมหน้า
+        Navigator.push(context, route);
+      },
+      child: Container(
+        //margin: const EdgeInsets.only(left: 65, right: 65),
+        width: 106,
+        height: 101,
+        child: new Center(
+          widthFactor: 58,
+          heightFactor: 64,
+          child: new Image.asset(
+            'images/assignActivity.png',
+            width: 58,
+            height: 64,
+          ),
         ),
-      ),
-      decoration: new BoxDecoration(
-        color: Colors.white,
-        borderRadius: new BorderRadius.circular(35.0),
+        decoration: new BoxDecoration(
+          color: Colors.white,
+          borderRadius: new BorderRadius.circular(35.0),
+        ),
       ),
     );
   }
@@ -307,7 +323,7 @@ class _HomeState extends State<Home> {
               ),
             ),
             userInfo(),
-            patientList(),
+            patientList2(),
             Padding(
               padding: const EdgeInsets.only(top: 350,left: 60),
               child: signOut(),
@@ -323,13 +339,14 @@ class _HomeState extends State<Home> {
           width: 24,
         ),
         title: MyStyle().txt16BoldB('ออกจากระบบ'),
-        onTap: () {
-          Navigator.pop(
-              context); // ลูกศรกลับ แก้ปัญหาเรื่องตัว Drawer ไม่หดกลับ
-          MaterialPageRoute route =
-              MaterialPageRoute(builder: (value) => SignIn()); //วิธีเชื่อมหน้า
-          Navigator.push(context, route);
-        },
+        onTap: ()=> signOutProcess(),
+        // onTap: () {
+        //   Navigator.pop(
+        //       context); // ลูกศรกลับ แก้ปัญหาเรื่องตัว Drawer ไม่หดกลับ
+        //   MaterialPageRoute route =
+        //       MaterialPageRoute(builder: (value) => SignIn()); //วิธีเชื่อมหน้า
+        //   Navigator.push(context, route);
+        // },
       );
 
   ListTile userInfo() => ListTile(
@@ -391,7 +408,7 @@ class _HomeState extends State<Home> {
   // }
 
 
-  ListTile patientList() => ListTile(
+  ListTile patientList2() => ListTile(
         leading: Image.asset(
           'images/add-friend.png',
           height: 24,
